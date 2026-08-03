@@ -54,3 +54,53 @@ Write-Host "  Plugins: $pluginsRoot"
 Write-Host "  Mod DLL: $destDll"
 Write-Host "Wrote $buildInfoPath"
 Write-Host "Restart Valheim fully, then check BepInEx\LogOutput.log for the startup message."
+
+# Thunderstore / Hexium package (flat zip: manifest, icon, README, DLL at root)
+$team = "Hardwire99"
+$packageName = "{0}-{1}-{2}.zip" -f $team, "PortalStation", $modVersion
+$packagePath = Join-Path $artifactDir $packageName
+$stagingDir = Join-Path $artifactDir "thunderstore-staging"
+
+Write-Host ""
+Write-Host "Packaging for Thunderstore and Hexium..."
+
+if (Test-Path $stagingDir) { Remove-Item $stagingDir -Recurse -Force }
+New-Item -ItemType Directory -Force -Path $stagingDir | Out-Null
+
+Copy-Item $sourceDll (Join-Path $stagingDir "PortalStation.dll") -Force
+Copy-Item (Join-Path $root "manifest.json") (Join-Path $stagingDir "manifest.json") -Force
+Copy-Item (Join-Path $root "README.md") (Join-Path $stagingDir "README.md") -Force
+
+$iconSource = Join-Path $root "icon.png"
+$iconDest = Join-Path $stagingDir "icon.png"
+if (Test-Path $iconSource) {
+    Add-Type -AssemblyName System.Drawing
+    $srcImage = [System.Drawing.Image]::FromFile((Resolve-Path $iconSource))
+    try {
+        $dstImage = New-Object System.Drawing.Bitmap(256, 256)
+        $graphics = [System.Drawing.Graphics]::FromImage($dstImage)
+        try {
+            $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+            $graphics.DrawImage($srcImage, 0, 0, 256, 256)
+            $dstImage.Save($iconDest, [System.Drawing.Imaging.ImageFormat]::Png)
+        }
+        finally {
+            $graphics.Dispose()
+            $dstImage.Dispose()
+        }
+    }
+    finally {
+        $srcImage.Dispose()
+    }
+    Write-Host "Wrote 256x256 Thunderstore icon to $iconDest"
+}
+else {
+    throw "Missing package icon: $iconSource"
+}
+
+if (Test-Path $packagePath) { Remove-Item $packagePath -Force }
+Compress-Archive -Path (Join-Path $stagingDir "*") -DestinationPath $packagePath -Force
+Remove-Item $stagingDir -Recurse -Force
+
+Write-Host "Package created: $packagePath"
+Write-Host "Upload to Thunderstore (team $team) and Hexium using the same zip."

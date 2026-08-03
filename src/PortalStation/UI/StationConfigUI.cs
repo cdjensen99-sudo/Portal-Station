@@ -126,10 +126,7 @@ public sealed class StationConfigUI : MonoBehaviour
                 _displayNames[index] = GUILayout.TextField(
                     _displayNames[index],
                     GUILayout.Width(210f));
-                if (_displayNames[index].Length > ModConstants.DisplayNameMaxLength)
-                {
-                    _displayNames[index] = _displayNames[index].Substring(0, ModConstants.DisplayNameMaxLength);
-                }
+                _displayNames[index] = PortalTextHelper.ClampDisplayName(_displayNames[index]);
 
                 GUILayout.EndVertical();
             }

@@ -34,6 +34,8 @@ public sealed class StationSignVisual : MonoBehaviour
             return;
         }
 
-        _text.color = highlighted ? new Color(1f, 0.92f, 0.35f) : _defaultColor;
+        _text.color = highlighted && PortalTextHelper.TryGetHighlightColor(out Color highlightColor)
+            ? highlightColor
+            : _defaultColor;
     }
 }

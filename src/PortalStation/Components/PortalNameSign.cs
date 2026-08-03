@@ -49,7 +49,7 @@ public sealed class PortalNameSign : MonoBehaviour, Interactable, Hoverable, Tex
             return false;
         }
 
-        TextInput.instance.RequestText(this, "$piece_sign_input", ModConstants.DisplayNameMaxLength);
+        TextInput.instance.RequestText(this, "$piece_sign_input", PortalTextHelper.DisplayNameMaxLength);
         return true;
     }
 
@@ -70,14 +70,7 @@ public sealed class PortalNameSign : MonoBehaviour, Interactable, Hoverable, Tex
             return;
         }
 
-        text = text?.Trim() ?? string.Empty;
-        if (text.Length > ModConstants.DisplayNameMaxLength)
-        {
-            Player.m_localPlayer?.Message(
-                MessageHud.MessageType.Center,
-                $"Sign text cannot exceed {ModConstants.DisplayNameMaxLength} characters.");
-            return;
-        }
+        text = PortalTextHelper.ClampDisplayName(text?.Trim() ?? string.Empty);
 
         ZNetView nview = _portal.GetComponent<ZNetView>();
         if (nview != null && nview.IsValid() && ZNet.instance != null && ZNet.instance.IsServer())
@@ -105,7 +98,7 @@ public sealed class PortalNameSign : MonoBehaviour, Interactable, Hoverable, Tex
             display = "...";
         }
 
-        _visual.SetDisplayText(display);
+        _visual.SetDisplayText(PortalTextHelper.FormatDisplayForRender(display));
     }
 
     internal void SetDisplayText(string displayText)
@@ -156,7 +149,7 @@ public sealed class PortalNameSign : MonoBehaviour, Interactable, Hoverable, Tex
             return;
         }
 
-        if (text != null && text.Length > ModConstants.DisplayNameMaxLength)
+        if (text != null && text.Length > PortalTextHelper.DisplayNameMaxLength)
         {
             return;
         }

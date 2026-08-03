@@ -36,11 +36,7 @@ internal static class PortalTagHelper
             return false;
         }
 
-        displayText = displayText?.Trim() ?? string.Empty;
-        if (displayText.Length > ModConstants.DisplayNameMaxLength)
-        {
-            displayText = displayText.Substring(0, ModConstants.DisplayNameMaxLength);
-        }
+        displayText = PortalTextHelper.ClampDisplayName(displayText?.Trim() ?? string.Empty);
 
         ZNetView nview = portal.GetComponent<ZNetView>();
         if (nview == null || !nview.IsValid())
@@ -91,7 +87,7 @@ internal static class PortalTagHelper
         }
 
         PortalNameSign displaySign = portal.GetComponentInChildren<PortalNameSign>(true);
-        displaySign?.SetDisplayText(finalDisplay);
+        displaySign?.SetDisplayText(PortalTextHelper.FormatDisplayForRender(finalDisplay));
 
         return true;
     }

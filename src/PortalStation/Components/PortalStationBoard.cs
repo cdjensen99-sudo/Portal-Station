@@ -213,7 +213,8 @@ public sealed class PortalStationBoard : MonoBehaviour
         StationSignVisual headerVisual = _headerSign != null
             ? _headerSign.GetComponent<StationSignVisual>()
             : null;
-        headerVisual?.SetDisplayText(string.IsNullOrWhiteSpace(GetStationName()) ? "..." : GetStationName());
+        string display = string.IsNullOrWhiteSpace(GetStationName()) ? "..." : GetStationName();
+        headerVisual?.SetDisplayText(PortalTextHelper.FormatDisplayForRender(display));
 
         for (int i = 0; i < ModConstants.DestinationSlotCount; i++)
         {
@@ -254,10 +255,7 @@ public sealed class PortalStationBoard : MonoBehaviour
         for (int i = 0; i < ModConstants.DestinationSlotCount; i++)
         {
             portalNames[i] = PortalTextHelper.ClampPortalName(portalNames[i]);
-            if (displayNames[i].Length > ModConstants.DisplayNameMaxLength)
-            {
-                displayNames[i] = displayNames[i].Substring(0, ModConstants.DisplayNameMaxLength);
-            }
+            displayNames[i] = PortalTextHelper.ClampDisplayName(displayNames[i]);
         }
 
         List<PortalStationBoard> group = StationGroupHelper.GetLinkedGroup(this, stationName);

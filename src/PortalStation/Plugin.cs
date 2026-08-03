@@ -29,6 +29,8 @@ public sealed class PortalStationPlugin : BaseUnityPlugin
             Log.LogError($"Harmony PatchAll failed: {ex}");
         }
 
+        ModConfig.Bind(Config);
+
         StationRegistrar.Init();
 
         if (GetComponent<StationConfigUI>() == null)

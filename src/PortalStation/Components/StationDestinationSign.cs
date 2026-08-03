@@ -57,7 +57,7 @@ public sealed class StationDestinationSign : MonoBehaviour, Hoverable
             display = "...";
         }
 
-        _visual.SetDisplayText(display);
+        _visual.SetDisplayText(PortalTextHelper.FormatDisplayForRender(display));
 
         string activeTag = _station.GetLinkedPortalTag();
         string portalName = _station.GetSlotPortalName(slotIndex);

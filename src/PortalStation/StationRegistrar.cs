@@ -47,8 +47,8 @@ internal static class StationRegistrar
             Category = PieceCategories.Misc,
             Enabled = true
         };
-        config.AddRequirement("Wood", 58);
-        config.AddRequirement("Coal", 19);
+        config.AddRequirement("Wood", ModConfig.CraftCostWood.Value);
+        config.AddRequirement("Coal", ModConfig.CraftCostCoal.Value);
 
         Sprite icon = StationHammerIcon.GetSprite();
         if (icon != null)

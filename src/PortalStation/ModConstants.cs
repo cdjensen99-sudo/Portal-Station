@@ -3,9 +3,11 @@ namespace PortalStation;
 public static class ModConstants
 {
     public const string ModName = "Portal Station";
-    public const string ModVersion = "0.3.1";
+    public const string ModVersion = "0.3.2";
     public const string ModGuid = "com.portalstation";
-    public const string BuildLabel = "v0.3.1";
+    public const string BuildLabel = "v0.3.2";
+
+    public const string ConfigSection = "PortalStation";
 
     public const string PrefabStation = "portal_station";
     public const string LegacyPrefabStation = "runic_portal_station";
@@ -21,7 +23,9 @@ public static class ModConstants
     public const int GridRows = 6;
 
     public const int PortalNameMaxLength = 10;
-    public const int DisplayNameMaxLength = 50;
+    public const int DefaultDisplayNameMaxLength = 50;
+    public const int DefaultCraftCostWood = 58;
+    public const int DefaultCraftCostCoal = 19;
 
     public const float PortalLinkRadius = 15f;
     public const float StationGroupRadius = 10f;
