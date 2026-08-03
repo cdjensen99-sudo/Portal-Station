@@ -14,6 +14,7 @@ public sealed class StationSignVisual : MonoBehaviour
         if (_text != null)
         {
             _defaultColor = _text.color;
+            _text.richText = true;
             _text.text = "...";
         }
     }

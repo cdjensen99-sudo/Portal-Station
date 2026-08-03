@@ -13,7 +13,8 @@ internal static class StationSignGridBuilder
     private const float HeaderSignForwardOffset = ModConstants.StationHeaderSignForwardOffset;
     private const float SignForwardOffset = ModConstants.StationDestinationSignForwardOffset;
 
-    private static readonly float[] ColumnCenters = { -1f, 0f, 1f };
+    // Board face +X is the viewer's left; slot #1 (index 0) must be left column.
+    private static readonly float[] ColumnCenters = { 1f, 0f, -1f };
 
     internal static StationHeaderSign BuildHeaderSign(Transform root)
     {
@@ -29,13 +30,15 @@ internal static class StationSignGridBuilder
     internal static StationDestinationSign[] BuildDestinationSigns(Transform root)
     {
         StationDestinationSign[] destinations = new StationDestinationSign[ModConstants.DestinationSlotCount];
-        for (int row = 0; row < ModConstants.GridRows; row++)
+        for (int uiRow = 0; uiRow < ModConstants.GridRows; uiRow++)
         {
-            float rowBottomY = BoardBottomY + row * SignHeight;
+            // UI row 0 is the top row (slots #1–#3); builder row 0 was at the bottom Y.
+            int visualRow = (ModConstants.GridRows - 1) - uiRow;
+            float rowBottomY = BoardBottomY + visualRow * SignHeight;
             for (int col = 0; col < ModConstants.GridColumns; col++)
             {
-                int index = row * ModConstants.GridColumns + col;
-                float wallFrontZ = ResolveSignWallFrontZ(root, col, row);
+                int index = uiRow * ModConstants.GridColumns + col;
+                float wallFrontZ = ResolveSignWallFrontZ(root, col, visualRow);
                 float signZ = wallFrontZ + SignFaceEpsilon + SignForwardOffset;
                 Vector3 position = new Vector3(ColumnCenters[col], rowBottomY, signZ);
                 GameObject signObject = CreateSignObject(root, $"_station_slot_{index:D2}", position);

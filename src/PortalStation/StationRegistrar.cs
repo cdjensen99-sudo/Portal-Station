@@ -8,6 +8,7 @@ namespace PortalStation;
 internal static class StationRegistrar
 {
     private static bool _registered;
+    private static string _registeredBuildLabel = string.Empty;
 
     internal static void Init()
     {
@@ -16,9 +17,16 @@ internal static class StationRegistrar
 
     private static void Register()
     {
-        if (_registered)
+        if (_registered && _registeredBuildLabel == ModConstants.BuildLabel)
         {
             return;
+        }
+
+        if (_registered)
+        {
+            PrefabManager.Instance.DestroyPrefab(ModConstants.PrefabStation);
+            PrefabManager.Instance.DestroyPrefab(ModConstants.LegacyPrefabStation);
+            _registered = false;
         }
 
         GameObject prefab = StationPrefabBuilder.Build();
@@ -32,8 +40,8 @@ internal static class StationRegistrar
 
         PieceConfig config = new PieceConfig
         {
-            Name = "$piece_runic_station",
-            Description = "$piece_runic_station_desc",
+            Name = "$piece_portal_station",
+            Description = "$piece_portal_station_desc",
             PieceTable = "Hammer",
             CraftingStation = CraftingStations.Workbench,
             Category = PieceCategories.Misc,
@@ -51,7 +59,9 @@ internal static class StationRegistrar
         PieceManager.Instance.AddPiece(new CustomPiece(prefab, fixReference: false, config));
 
         _registered = true;
+        _registeredBuildLabel = ModConstants.BuildLabel;
         PrefabManager.OnVanillaPrefabsAvailable -= Register;
-        PortalStationPlugin.Log.LogInfo("Portal Station registered with Jotunn (prefab + hammer piece).");
+        PortalStationPlugin.Log.LogInfo(
+            $"Portal Station registered with Jotunn ({ModConstants.BuildLabel}).");
     }
 }

@@ -31,6 +31,11 @@ public sealed class PortalStationPlugin : BaseUnityPlugin
 
         StationRegistrar.Init();
 
+        if (GetComponent<StationConfigUI>() == null)
+        {
+            gameObject.AddComponent<StationConfigUI>();
+        }
+
         Log.LogInfo($"{ModConstants.ModName} {ModConstants.ModVersion} ({ModConstants.BuildLabel}) loaded.");
     }
 

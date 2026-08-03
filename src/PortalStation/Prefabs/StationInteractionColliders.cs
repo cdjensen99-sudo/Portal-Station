@@ -21,6 +21,8 @@ internal static class StationInteractionColliders
             return;
         }
 
+        int pieceLayer = LayerMask.NameToLayer("piece");
+
         foreach (Collider collider in root.GetComponentsInChildren<Collider>(true))
         {
             if (collider.gameObject == root)
@@ -29,6 +31,17 @@ internal static class StationInteractionColliders
             }
 
             collider.enabled = enabled;
+
+            if (enabled && pieceLayer >= 0 && IsInteractionTarget(collider.gameObject))
+            {
+                collider.gameObject.layer = pieceLayer;
+            }
         }
+    }
+
+    private static bool IsInteractionTarget(GameObject target)
+    {
+        return target.GetComponent<StationHeaderSign>() != null
+            || target.GetComponent<StationDestinationSign>() != null;
     }
 }

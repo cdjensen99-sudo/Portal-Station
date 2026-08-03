@@ -6,13 +6,16 @@ namespace PortalStation;
 public static class StationPrefabBuilder
 {
     private static GameObject _cachedPrefab;
+    private static string _cachedBuildLabel = string.Empty;
 
     public static GameObject Build()
     {
-        if (_cachedPrefab != null)
+        if (_cachedPrefab != null && _cachedBuildLabel == ModConstants.BuildLabel)
         {
             return _cachedPrefab;
         }
+
+        _cachedBuildLabel = ModConstants.BuildLabel;
 
         GameObject station = PrefabManager.Instance.CreateClonedPrefab(ModConstants.PrefabStation, "piece_wood_wall");
         if (station == null)
@@ -37,9 +40,9 @@ public static class StationPrefabBuilder
         ConfigurePlacementCollider(station);
         ConfigureZNetView(station);
 
-        if (station.GetComponent<RunicStation>() == null)
+        if (station.GetComponent<PortalStationBoard>() == null)
         {
-            station.AddComponent<RunicStation>();
+            station.AddComponent<PortalStationBoard>();
         }
 
         StationFrameBuilder.BuildFrame(station.transform);
@@ -47,7 +50,7 @@ public static class StationPrefabBuilder
 
         StationHeaderSign header = StationSignGridBuilder.BuildHeaderSign(station.transform);
         StationDestinationSign[] destinations = StationSignGridBuilder.BuildDestinationSigns(station.transform);
-        station.GetComponent<RunicStation>().BindChildSigns(header, destinations);
+        station.GetComponent<PortalStationBoard>().BindChildSigns(header, destinations);
 
         station.transform.localScale = Vector3.one * ModConstants.StationVisualScale;
 
