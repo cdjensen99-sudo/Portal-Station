@@ -38,6 +38,7 @@ internal static class ModLocalization
         translations["piece_portal_station_destination_empty"] = "Empty destination slot";
         translations["piece_portal_station_activate"] = "Activate destination";
         translations["piece_portal_station_clear"] = "Clear portal name";
+        translations["piece_portal_station_sign"] = "Sign";
     }
 }
 

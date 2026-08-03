@@ -3,9 +3,9 @@ namespace PortalStation;
 public static class ModConstants
 {
     public const string ModName = "Portal Station";
-    public const string ModVersion = "0.3.0";
+    public const string ModVersion = "0.3.1";
     public const string ModGuid = "com.portalstation";
-    public const string BuildLabel = "v0.3.0";
+    public const string BuildLabel = "v0.3.1";
 
     public const string PrefabStation = "portal_station";
     public const string LegacyPrefabStation = "runic_portal_station";

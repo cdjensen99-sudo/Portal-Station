@@ -1,6 +1,6 @@
 {
   "name": "PortalStation",
-  "version_number": "0.3.0",
+  "version_number": "0.3.1",
   "website_url": "",
   "description": "Craftable portal hub sign board. Link to a nearby portal, configure destinations, and switch active portal tags from one station.",
   "dependencies": [

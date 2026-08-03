@@ -37,6 +37,7 @@ public static class StationPrefabBuilder
             Object.DestroyImmediate(collider);
         }
 
+        ConfigurePiece(station);
         ConfigurePlacementCollider(station);
         ConfigureZNetView(station);
 
@@ -75,6 +76,21 @@ public static class StationPrefabBuilder
         {
             Object.DestroyImmediate(itemDrop);
         }
+    }
+
+    private static void ConfigurePiece(GameObject station)
+    {
+        Piece piece = station.GetComponent<Piece>();
+        if (piece == null)
+        {
+            return;
+        }
+
+        piece.m_name = "$piece_portal_station";
+        piece.m_description = "$piece_portal_station_desc";
+        piece.m_category = Piece.PieceCategory.Misc;
+        piece.m_enabled = true;
+        StationHammerIcon.Apply(piece);
     }
 
     private static void ConfigurePlacementCollider(GameObject station)

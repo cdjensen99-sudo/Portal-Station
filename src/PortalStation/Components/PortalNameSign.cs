@@ -33,7 +33,8 @@ public sealed class PortalNameSign : MonoBehaviour, Interactable, Hoverable, Tex
             text = "...";
         }
 
-        return $"\"{text}\"\nSign\n[<color=yellow><b>$KEY_Use</b></color>] $piece_use";
+        return Localization.instance.Localize(
+            $"\"{text}\"\n$piece_portal_station_sign\n[<color=yellow><b>$KEY_Use</b></color>] $piece_use");
     }
 
     public bool Interact(Humanoid user, bool hold, bool alt)
