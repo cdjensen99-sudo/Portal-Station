@@ -1,7 +1,7 @@
 {
   "name": "PortalStation",
   "version_number": "0.3.2",
-  "website_url": "https://github.com/cdjensen99-sudo/PortalStation",
+  "website_url": "https://github.com/cdjensen99-sudo/Portal-Station",
   "description": "Vanilla portal naming helper: auto sign on portals plus craftable Portal Station to retarget a nearby portal with LMB. Rich-text display names. Install on server and all clients.",
   "dependencies": [
     "denikson-BepInExPack_Valheim-5.4.2202",

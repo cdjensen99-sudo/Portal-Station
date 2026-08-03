@@ -10,9 +10,9 @@ Place a **Portal Station** sign board near your portal, configure your destinati
 
 | | |
 |---|---|
-| **GitHub** | https://github.com/cdjensen99-sudo/PortalStation |
+| **GitHub** | https://github.com/cdjensen99-sudo/Portal-Station |
 | **Discord** | https://discord.gg/cCNG8xKXMn |
-| **Issues & feedback** | [GitHub Issues](https://github.com/cdjensen99-sudo/PortalStation/issues) |
+| **Issues & feedback** | [GitHub Issues](https://github.com/cdjensen99-sudo/Portal-Station/issues) |
 
 ---
 
