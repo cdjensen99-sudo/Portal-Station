@@ -1,0 +1,10 @@
+{
+  "name": "PortalStation",
+  "version_number": "0.2.0",
+  "website_url": "",
+  "description": "Craftable portal hub sign board. Link to a nearby portal, configure destinations, and switch active portal tags from one station.",
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2202",
+    "ValheimModding-Jotunn-2.29.2"
+  ]
+}

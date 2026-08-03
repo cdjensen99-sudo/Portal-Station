@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <ValheimPath>D:\SteamLibrary\steamapps\common\Valheim</ValheimPath>
+    <BepInExCore>$(ValheimPath)\BepInEx\core</BepInExCore>
+    <ValheimManaged>$(ValheimPath)\valheim_Data\Managed</ValheimManaged>
+    <ModVersion>0.1.0</ModVersion>
+  </PropertyGroup>
+</Project>
