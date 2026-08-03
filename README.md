@@ -86,7 +86,7 @@ Install via mod manager (recommended) or manually:
 
 ### 1. Place and name a portal
 
-![Name the portal tag (E on portal)](https://raw.githubusercontent.com/cdjensen99-sudo/PortalStation/master/art/Portal_Name.png)
+![Name the portal tag (E on portal)](art/Portal_Name.png)
 
 1. Build a vanilla portal.
 2. A sign appears above it automatically.
@@ -94,23 +94,23 @@ Install via mod manager (recommended) or manually:
 
 ### 2. Set the sign display (optional)
 
-![Name the sign display with rich text (E on sign)](https://raw.githubusercontent.com/cdjensen99-sudo/PortalStation/master/art/Portal_display_Name.png)
+![Name the sign display with rich text (E on sign)](art/Portal_display_Name.png)
 
 1. Look at the **sign above the portal** and press **E**.
 2. Enter display text with color codes, e.g. `<#FFD700>Home Portal</#FFD700>`.
 
 ### 3. Place the Portal Station
 
-![Portal and station placed together](https://raw.githubusercontent.com/cdjensen99-sudo/PortalStation/master/art/Station.png)
+![Portal and station placed together](art/Station.png)
 
 1. Open the hammer → **Misc** → **Portal Station**.
 2. Place it within **15 m** of the portal (workbench required).
 
-![Portal Station in the hammer menu](https://raw.githubusercontent.com/cdjensen99-sudo/PortalStation/master/art/Hammer.png)
+![Portal Station in the hammer menu](art/Hammer.png)
 
 ### 4. Configure the station
 
-![Station configuration UI](https://raw.githubusercontent.com/cdjensen99-sudo/PortalStation/master/art/Station_config.png)
+![Station configuration UI](art/Station_config.png)
 
 1. Press **E** on the **header sign** (top center of the board).
 2. Set the **station name**.
@@ -123,7 +123,7 @@ If a portal is within 15 m, the station links automatically.
 
 ### 5. Activate a destination
 
-![LMB on a destination sign retargets the linked portal](https://raw.githubusercontent.com/cdjensen99-sudo/PortalStation/master/art/Change_Name.png)
+![LMB on a destination sign retargets the linked portal](art/Change_Name.png)
 
 1. Look at a **destination sign** on the board.
 2. Press **LMB** (attack button — weapon swing is suppressed while hovering the sign).

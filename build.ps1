@@ -71,6 +71,25 @@ Copy-Item $sourceDll (Join-Path $stagingDir "PortalStation.dll") -Force
 Copy-Item (Join-Path $root "manifest.json") (Join-Path $stagingDir "manifest.json") -Force
 Copy-Item (Join-Path $root "README.md") (Join-Path $stagingDir "README.md") -Force
 
+$readmeScreenshots = @(
+    "Portal_Name.png",
+    "Portal_display_Name.png",
+    "Station.png",
+    "Hammer.png",
+    "Station_config.png",
+    "Change_Name.png"
+)
+$stagingArtDir = Join-Path $stagingDir "art"
+New-Item -ItemType Directory -Force -Path $stagingArtDir | Out-Null
+foreach ($screenshot in $readmeScreenshots) {
+    $screenshotSource = Join-Path $root "art\$screenshot"
+    if (-not (Test-Path $screenshotSource)) {
+        throw "Missing README screenshot: $screenshotSource"
+    }
+    Copy-Item $screenshotSource (Join-Path $stagingArtDir $screenshot) -Force
+}
+Write-Host "Bundled $($readmeScreenshots.Count) README screenshots into package art/"
+
 $iconSource = Join-Path $root "icon.png"
 $iconDest = Join-Path $stagingDir "icon.png"
 if (Test-Path $iconSource) {
