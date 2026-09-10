@@ -7,6 +7,7 @@
 - **Fixed:** Wood piece prefab names for 1.0 (`woodwall`, `woodwallhalf`, `woodwallquarter`, `wood_pole_2`).
 - **Fixed:** Inactive destination signs use `DefaultPortalDescription`; the **active** destination (matching the linked portal tag) uses `DefaultHighlightColor`.
 - **Changed:** Depends on Jotunn **2.30.0** (1.0-ready).
+- **Changed:** Hammer piece listed under **Build** (workbench category).
 - **Changed:** Removed redundant prefab re-registration warning from Jotunn.
 - **Version:** First 1.0.0 release — feature-complete and Valheim 1.0 compliant.
 

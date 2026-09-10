@@ -43,7 +43,7 @@ internal static class StationRegistrar
             Description = "$piece_portal_station_desc",
             PieceTable = "Hammer",
             CraftingStation = CraftingStations.Workbench,
-            Category = PieceCategories.Misc,
+            Category = PieceCategories.Building,
             Enabled = true
         };
         config.AddRequirement("Wood", ModConfig.CraftCostWood.Value);

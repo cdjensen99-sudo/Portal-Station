@@ -35,6 +35,7 @@ A hammer-buildable sign board with:
 - **18 destination signs** (3 columns × 6 rows) — press **LMB** to activate a destination
 - Links to the nearest vanilla portal within **15 m**
 - Default craft cost: **58 Wood + 19 Coal** (configurable)
+- Hammer category: **Build** (workbench)
 - Requires a **workbench** to place and remove
 
 ### Linked station groups
@@ -103,7 +104,7 @@ Compatible with **Valheim 1.0** (tested on 1.0.7). Install via mod manager (reco
 
 ![Portal and station placed together](art/Station.png)
 
-1. Open the hammer → **Misc** → **Portal Station**.
+1. Open the hammer → **Build** → **Portal Station**.
 2. Place it within **15 m** of the portal (workbench required).
 
 ![Portal Station in the hammer menu](art/Hammer.png)

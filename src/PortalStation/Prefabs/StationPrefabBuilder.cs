@@ -89,7 +89,7 @@ public static class StationPrefabBuilder
 
         piece.m_name = "$piece_portal_station";
         piece.m_description = "$piece_portal_station_desc";
-        piece.m_category = Piece.PieceCategory.Misc;
+        piece.m_category = Piece.PieceCategory.BuildingWorkbench;
         piece.m_enabled = true;
         StationHammerIcon.Apply(piece);
     }
