@@ -21,7 +21,7 @@
       <Private>false</Private>
     </Reference>
     <Reference Include="Jotunn">
-      <HintPath>C:\Users\cdjen\AppData\Roaming\r2modmanPlus-local\Valheim\profiles\Portals\BepInEx\plugins\ValheimModding-Jotunn\Jotunn.dll</HintPath>
+      <HintPath>$(JotunnPath)\Jotunn.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="assembly_valheim">

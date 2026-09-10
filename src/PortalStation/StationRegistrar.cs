@@ -36,8 +36,7 @@ internal static class StationRegistrar
             return;
         }
 
-        PrefabManager.Instance.AddPrefab(prefab);
-
+        // CreateClonedPrefab already registers with PrefabManager; AddPiece hooks hammer/ZNetScene.
         PieceConfig config = new PieceConfig
         {
             Name = "$piece_portal_station",

@@ -58,10 +58,10 @@ internal static class StationSignGridBuilder
         {
             return row < 4
                 ? ResolveWallPieceFrontZ(root, "woodwall")
-                : ResolveWallPieceFrontZ(root, "wood_wall_half");
+                : ResolveWallPieceFrontZ(root, "woodwallhalf");
         }
 
-        return ResolveWallPieceFrontZ(root, "wood_wall_quarter");
+        return ResolveWallPieceFrontZ(root, "woodwallquarter");
     }
 
     private static float ResolveWallPieceFrontZ(Transform root, string wallPieceName)
@@ -127,6 +127,8 @@ internal static class StationSignGridBuilder
             switch (current.name)
             {
                 case "woodwall":
+                case "woodwallhalf":
+                case "woodwallquarter":
                 case "wood_wall_half":
                 case "wood_wall_quarter":
                     return true;
@@ -145,7 +147,7 @@ internal static class StationSignGridBuilder
 
     private static float MeasureWallPlankThickness()
     {
-        GameObject wallPrefab = StationVisualHelper.TryGetPrefab("woodwall", "piece_wood_wall");
+        GameObject wallPrefab = StationVisualHelper.TryGetPrefab("woodwall", "piece_woodwall");
         if (wallPrefab == null)
         {
             return 0.26f;

@@ -55,10 +55,10 @@ If two portals both have the tag `Home`, they connect the same way vanilla Valhe
 
 ## Requirements
 
-Install via mod manager (recommended) or manually:
+Compatible with **Valheim 1.0** (tested on 1.0.7). Install via mod manager (recommended) or manually:
 
-- [BepInEx Pack for Valheim](https://thunderstore.io/c/valheim/p/denikson/BepInExPack_Valheim/)
-- [Jotunn](https://thunderstore.io/c/valheim/p/ValheimModding/Jotunn/)
+- [BepInEx Pack for Valheim](https://thunderstore.io/c/valheim/p/denikson/BepInExPack_Valheim/) **5.4.2350+** (Unity 6 pack)
+- [Jotunn](https://thunderstore.io/c/valheim/p/ValheimModding/Jotunn/) **2.30.0+**
 
 **Multiplayer:** Install on **server/host and every client**. Everyone needs the mod to see the station piece, portal signs, and configuration UI.
 
@@ -165,8 +165,8 @@ Restart Valheim after changing values. Craft cost changes apply on next game lau
 | `DisplayNameMaxLength` | `50` | **DISPLAY TEXT ONLY** — does not change the portal tag/name used for pairing (still max 10 plain characters via E on the portal). This limit applies only to sign display descriptions. Very high values will drastically shrink text size on signs. |
 | `CraftCostWood` | `58` | Wood required to build a Portal Station |
 | `CraftCostCoal` | `19` | Coal required to build a Portal Station |
-| `DefaultPortalDescription` | *(empty)* | Default color prefix for sign display text when no color code is set (e.g. `<#FFD700>`). Leave empty for none. Override per sign by adding a color code before the display name. |
-| `DefaultHighlightColor` | `<#87CEEB>` | Color for the **active** destination sign on the station board |
+| `DefaultPortalDescription` | *(empty)* | Default color for **inactive** sign display names when no color code is set (e.g. `<#FFD700>`). Leave empty for none. Override per sign by adding a color code before the display name. |
+| `DefaultHighlightColor` | `<#87CEEB>` | Color for the **currently active** destination on the station board (the slot matching the linked portal's tag) |
 
 ### Not configurable (hardcoded)
 
@@ -194,6 +194,7 @@ Restart Valheim after changing values. Craft cost changes apply on next game lau
 
 - **Name portals before pairing** — both ends need matching tags, just like vanilla.
 - **Use short portal tags, long display names** — `S1` on the tag, `<#FFD700>Swamp Outpost</#FFD700>` on the display.
+- **Default vs active colors** — set `DefaultPortalDescription` for normal display names; the active destination switches to `DefaultHighlightColor`.
 - **Empty slot = clear tag** — useful for unnamed portal pairing.
 - **Same station name + close together** — share up to 36 destination names across two boards (no duplicate tags across the group).
 - **Fully restart** after updating the DLL — hot-reload is unreliable for Valheim mods.

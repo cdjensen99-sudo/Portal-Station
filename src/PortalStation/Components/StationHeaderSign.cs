@@ -16,6 +16,11 @@ public sealed class StationHeaderSign : MonoBehaviour, Interactable, Hoverable
         return "$piece_portal_station_header";
     }
 
+    public float GetHoverOffset()
+    {
+        return 0f;
+    }
+
     public string GetHoverText()
     {
         string stationName = _station != null ? _station.GetStationName() : string.Empty;

@@ -41,8 +41,8 @@ internal static class StationFrameBuilder
             return;
         }
 
-        AddWall(root, "woodwall", new Vector3(-0.5f, YBottomBeam, ZPlane), "piece_wood_wall");
-        AddWall(root, "wood_wall_half", new Vector3(-0.5f, YSidePole1m, ZPlane));
+        AddWall(root, "woodwall", new Vector3(-0.5f, YBottomBeam, ZPlane), "piece_woodwall");
+        AddWall(root, "woodwallhalf", new Vector3(-0.5f, YSidePole1m, ZPlane), "wood_wall_half");
         AddQuarter(root, new Vector3(XQuarterCenter, YBottomBeam, ZPlane));
         AddQuarter(root, new Vector3(XQuarterCenter, YBottomBeam + 1f, ZPlane));
         AddQuarter(root, new Vector3(XQuarterCenter, YSidePole1m, ZPlane));
@@ -62,8 +62,8 @@ internal static class StationFrameBuilder
 
     private static void BuildSidePosts(Transform root)
     {
-        AddPole(root, "wood_pole2", new Vector3(XLeft, YSidePole2m, ZPlane));
-        AddPole(root, "wood_pole2", new Vector3(XRight, YSidePole2m, ZPlane));
+        AddPole(root, "wood_pole_2", new Vector3(XLeft, YSidePole2m, ZPlane), "wood_pole2");
+        AddPole(root, "wood_pole_2", new Vector3(XRight, YSidePole2m, ZPlane), "wood_pole2");
         AddPole(root, "wood_pole", new Vector3(XLeft, YSidePole1m, ZPlane));
         AddPole(root, "wood_pole", new Vector3(XRight, YSidePole1m, ZPlane));
     }
@@ -74,9 +74,9 @@ internal static class StationFrameBuilder
         AddBeam(root, "wood_beam", new Vector3(0.5f, YTopBeam, ZPlane));
     }
 
-    private static void AddPole(Transform root, string prefabName, Vector3 localPosition)
+    private static void AddPole(Transform root, string prefabName, Vector3 localPosition, params string[] fallbackNames)
     {
-        StationVisualHelper.AddVisualChild(root, prefabName, localPosition, Quaternion.identity);
+        StationVisualHelper.AddVisualChild(root, prefabName, localPosition, Quaternion.identity, fallbackNames);
     }
 
     private static void AddBeam(Transform root, string prefabName, Vector3 localPosition)
@@ -99,9 +99,10 @@ internal static class StationFrameBuilder
     {
         StationVisualHelper.AddVisualChild(
             root,
-            "wood_wall_quarter",
+            "woodwallquarter",
             localPosition,
             Quaternion.identity,
-            StationPieceAnchor.BottomFrontCenter);
+            StationPieceAnchor.BottomFrontCenter,
+            "wood_wall_quarter");
     }
 }

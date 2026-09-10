@@ -1,8 +1,13 @@
 <Project>
   <PropertyGroup>
-    <ValheimPath>D:\SteamLibrary\steamapps\common\Valheim</ValheimPath>
-    <BepInExCore>$(ValheimPath)\BepInEx\core</BepInExCore>
+    <ValheimPath Condition="'$(ValheimPath)' == ''">D:\SteamLibrary\steamapps\common\Valheim</ValheimPath>
     <ValheimManaged>$(ValheimPath)\valheim_Data\Managed</ValheimManaged>
-    <ModVersion>0.1.0</ModVersion>
+    <!-- BepInExPack 5.4.2350 is the Unity 6 pack; game install BepInEx/core is empty under Gale. -->
+    <BepInExCore Condition="'$(BepInExCore)' == ''">$(USERPROFILE)\AppData\Roaming\com.kesomannen.gale\cache\denikson-BepInExPack_Valheim\5.4.2350\BepInEx\core</BepInExCore>
+    <GaleProfile Condition="'$(GaleProfile)' == ''">New Release</GaleProfile>
+    <GaleProfileRoot>$(USERPROFILE)\AppData\Roaming\com.kesomannen.gale\valheim\profiles\$(GaleProfile)</GaleProfileRoot>
+    <JotunnPath Condition="'$(JotunnPath)' == ''">$(GaleProfileRoot)\BepInEx\plugins\ValheimModding-Jotunn</JotunnPath>
+    <ModDeployDir>$(GaleProfileRoot)\BepInEx\plugins\Hardwire99-PortalStation</ModDeployDir>
+    <ModVersion>1.0.0</ModVersion>
   </PropertyGroup>
 </Project>

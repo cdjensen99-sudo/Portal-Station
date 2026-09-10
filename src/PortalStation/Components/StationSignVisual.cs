@@ -34,8 +34,26 @@ public sealed class StationSignVisual : MonoBehaviour
             return;
         }
 
-        _text.color = highlighted && PortalTextHelper.TryGetHighlightColor(out Color highlightColor)
-            ? highlightColor
-            : _defaultColor;
+        // Rich-text color tags (default/active) already drive appearance via SetDisplayText.
+        // Keep vertex color as a fallback only when the rendered string has no color tag.
+        if (PortalTextHelper.HasExplicitColor(_text.text))
+        {
+            _text.color = Color.white;
+            return;
+        }
+
+        if (highlighted && PortalTextHelper.TryGetHighlightColor(out Color highlightColor))
+        {
+            _text.color = highlightColor;
+            return;
+        }
+
+        if (!highlighted && PortalTextHelper.TryGetDefaultDisplayColor(out Color defaultDisplayColor))
+        {
+            _text.color = defaultDisplayColor;
+            return;
+        }
+
+        _text.color = _defaultColor;
     }
 }

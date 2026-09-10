@@ -67,7 +67,7 @@ internal static class PortalTextHelper
         return portalName ?? string.Empty;
     }
 
-    internal static string FormatDisplayForRender(string displayText)
+    internal static string FormatDisplayForRender(string displayText, bool highlighted = false)
     {
         if (string.IsNullOrWhiteSpace(displayText) || displayText == "...")
         {
@@ -75,18 +75,25 @@ internal static class PortalTextHelper
         }
 
         string trimmed = displayText.Trim();
-        if (HasExplicitColor(trimmed))
+        bool hasExplicitColor = HasExplicitColor(trimmed);
+
+        // Explicit per-sign color wins while inactive. Active destination always uses highlight color.
+        if (hasExplicitColor && !highlighted)
         {
             return trimmed;
         }
 
-        string defaultColor = ModConfig.DefaultPortalDescription?.Value?.Trim();
-        if (string.IsNullOrEmpty(defaultColor))
+        string colorTag = highlighted
+            ? GetHighlightColorTag()
+            : ModConfig.DefaultPortalDescription?.Value?.Trim();
+
+        if (string.IsNullOrEmpty(colorTag))
         {
-            return trimmed;
+            return hasExplicitColor ? StripRichText(trimmed) : trimmed;
         }
 
-        return NormalizeColorTag(defaultColor) + trimmed;
+        string plain = hasExplicitColor ? StripRichText(trimmed) : trimmed;
+        return NormalizeColorTag(colorTag) + plain;
     }
 
     internal static bool PortalNamesEqual(string left, string right)
@@ -97,12 +104,29 @@ internal static class PortalTextHelper
             System.StringComparison.OrdinalIgnoreCase);
     }
 
-    internal static bool TryGetHighlightColor(out Color color)
+    internal static string GetHighlightColorTag()
     {
         string raw = ModConfig.DefaultHighlightColor?.Value?.Trim();
         if (string.IsNullOrEmpty(raw))
         {
-            raw = ModConfig.DefaultHighlightColorValue;
+            return ModConfig.DefaultHighlightColorValue;
+        }
+
+        return raw;
+    }
+
+    internal static bool TryGetHighlightColor(out Color color)
+    {
+        return TryParseColorTag(GetHighlightColorTag(), out color);
+    }
+
+    internal static bool TryGetDefaultDisplayColor(out Color color)
+    {
+        string raw = ModConfig.DefaultPortalDescription?.Value?.Trim();
+        if (string.IsNullOrEmpty(raw))
+        {
+            color = Color.white;
+            return false;
         }
 
         return TryParseColorTag(raw, out color);

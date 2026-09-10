@@ -25,6 +25,11 @@ public sealed class PortalNameSign : MonoBehaviour, Interactable, Hoverable, Tex
         return "Sign";
     }
 
+    public float GetHoverOffset()
+    {
+        return 0f;
+    }
+
     public string GetHoverText()
     {
         string text = PortalTextHelper.StripRichText(GetStoredDisplayText());

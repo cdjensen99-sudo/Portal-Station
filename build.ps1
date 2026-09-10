@@ -1,6 +1,6 @@
 param(
     [string]$ValheimPath = "D:\SteamLibrary\steamapps\common\Valheim",
-    [string]$DeployProfile = "C:\Users\cdjen\AppData\Roaming\r2modmanPlus-local\Valheim\profiles\Portals"
+    [string]$DeployProfile = "$env:USERPROFILE\AppData\Roaming\com.kesomannen.gale\valheim\profiles\New Release"
 )
 
 $ErrorActionPreference = "Stop"
@@ -11,14 +11,16 @@ $modConstants = Get-Content $modConstantsPath -Raw
 $modVersion = if ($modConstants -match 'ModVersion = "([^"]+)"') { $Matches[1] } else { "unknown" }
 $buildLabel = if ($modConstants -match 'BuildLabel = "([^"]+)"') { $Matches[1] } else { "unknown" }
 
-Write-Host "Building Portal Station $modVersion ($buildLabel)..."
+Write-Host "Building Portal Station $modVersion ($buildLabel) against Valheim 1.0 / Unity 6..."
+Write-Host "  ValheimManaged: $ValheimPath\valheim_Data\Managed"
+Write-Host "  BepInExCore:    Gale cache denikson-BepInExPack_Valheim 5.4.2350"
 
-dotnet build $solution -c Release
+dotnet build $solution -c Release --no-incremental
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 $artifactDir = Join-Path $root "artifacts"
 $pluginsRoot = Join-Path $DeployProfile "BepInEx\plugins"
-$pluginDir = Join-Path $pluginsRoot "PortalStation"
+$pluginDir = Join-Path $pluginsRoot "Hardwire99-PortalStation"
 New-Item -ItemType Directory -Force -Path $pluginDir | Out-Null
 
 $sourceDll = Join-Path $artifactDir "PortalStation.dll"
@@ -44,6 +46,7 @@ $buildInfoPath = Join-Path $pluginDir "BUILD.txt"
 @(
     "Portal Station $modVersion ($buildLabel)"
     "Built: $buildStamp"
+    "Target: Valheim 1.0 / Unity 6 (BepInExPack 5.4.2350)"
     "Verify in BepInEx log - should show `"$modVersion ($buildLabel) loaded.`""
 ) | Set-Content $buildInfoPath -Encoding UTF8
 
@@ -70,6 +73,11 @@ New-Item -ItemType Directory -Force -Path $stagingDir | Out-Null
 Copy-Item $sourceDll (Join-Path $stagingDir "PortalStation.dll") -Force
 Copy-Item (Join-Path $root "manifest.json") (Join-Path $stagingDir "manifest.json") -Force
 Copy-Item (Join-Path $root "README.md") (Join-Path $stagingDir "README.md") -Force
+
+$changelog = Join-Path $root "CHANGELOG.md"
+if (Test-Path $changelog) {
+    Copy-Item $changelog (Join-Path $stagingDir "CHANGELOG.md") -Force
+}
 
 $readmeScreenshots = @(
     "Portal_Name.png",

@@ -45,7 +45,7 @@ public static class ModConfig
             "DefaultPortalDescription",
             string.Empty,
             new ConfigDescription(
-                "Default color prefix for sign display text when no color code is set (e.g. <#FFD700>). " +
+                "Default color for inactive sign display names when no color code is set (e.g. <#FFD700>). " +
                 "Leave empty for none. Override per sign by adding a color code before the display name."));
 
         DefaultHighlightColor = config.Bind(
@@ -53,6 +53,7 @@ public static class ModConfig
             "DefaultHighlightColor",
             DefaultHighlightColorValue,
             new ConfigDescription(
-                "Color for the active destination sign on a station (e.g. <#87CEEB> or <color=cyan>)."));
+                "Color for the currently active destination on a station board " +
+                "(the slot matching the linked portal's tag). Example: <#87CEEB> or <color=cyan>."));
     }
 }

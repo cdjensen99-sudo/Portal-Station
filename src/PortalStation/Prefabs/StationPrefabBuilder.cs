@@ -17,15 +17,16 @@ public static class StationPrefabBuilder
 
         _cachedBuildLabel = ModConstants.BuildLabel;
 
-        GameObject station = PrefabManager.Instance.CreateClonedPrefab(ModConstants.PrefabStation, "piece_wood_wall");
+        // Valheim 1.0: piece_wood_wall is gone; woodwall / piece_woodwall remain.
+        GameObject station = PrefabManager.Instance.CreateClonedPrefab(ModConstants.PrefabStation, "woodwall");
         if (station == null)
         {
-            station = PrefabManager.Instance.CreateClonedPrefab(ModConstants.PrefabStation, "woodwall");
+            station = PrefabManager.Instance.CreateClonedPrefab(ModConstants.PrefabStation, "piece_woodwall");
         }
 
         if (station == null)
         {
-            PortalStationPlugin.Log.LogError("Could not clone piece_wood_wall for Portal Station root.");
+            PortalStationPlugin.Log.LogError("Could not clone woodwall/piece_woodwall for Portal Station root.");
             return null;
         }
 

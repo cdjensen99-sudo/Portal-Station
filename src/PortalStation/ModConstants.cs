@@ -3,9 +3,9 @@ namespace PortalStation;
 public static class ModConstants
 {
     public const string ModName = "Portal Station";
-    public const string ModVersion = "0.3.2";
+    public const string ModVersion = "1.0.0";
     public const string ModGuid = "com.portalstation";
-    public const string BuildLabel = "v0.3.2";
+    public const string BuildLabel = "v1.0.0";
 
     public const string ConfigSection = "PortalStation";
 

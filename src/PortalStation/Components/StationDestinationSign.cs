@@ -57,19 +57,25 @@ public sealed class StationDestinationSign : MonoBehaviour, Hoverable
             display = "...";
         }
 
-        _visual.SetDisplayText(PortalTextHelper.FormatDisplayForRender(display));
-
         string activeTag = _station.GetLinkedPortalTag();
         string portalName = _station.GetSlotPortalName(slotIndex);
         bool active = string.IsNullOrWhiteSpace(PortalTextHelper.StripRichText(portalName))
             ? string.IsNullOrWhiteSpace(activeTag)
             : PortalTextHelper.PortalNamesEqual(portalName, activeTag);
+
+        // Bake inactive vs active color into rich text — TMP color tags override vertex color.
+        _visual.SetDisplayText(PortalTextHelper.FormatDisplayForRender(display, active));
         _visual.SetHighlighted(active);
     }
 
     public string GetHoverName()
     {
         return "$piece_portal_station_destination";
+    }
+
+    public float GetHoverOffset()
+    {
+        return 0f;
     }
 
     public string GetHoverText()
