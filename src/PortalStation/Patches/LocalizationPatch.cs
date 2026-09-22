@@ -38,7 +38,13 @@ internal static class ModLocalization
         translations["piece_portal_station_destination_empty"] = "Empty destination slot";
         translations["piece_portal_station_activate"] = "Activate destination";
         translations["piece_portal_station_clear"] = "Clear portal name";
-        translations["piece_portal_station_sign"] = "Sign";
+        translations["piece_portal_station_sign"] = "Portal Sign";
+        translations["piece_portal_station_portal_sign_title"] = "Portal Sign Configuration";
+        translations["piece_portal_station_portal_sign_help"] =
+            "Portal tag is used for vanilla pairing (max 10 characters). Display text is what players read on the sign (color codes allowed).";
+        translations["piece_portal_station_portal_tag_label"] = "Portal tag";
+        translations["piece_portal_station_display_label"] = "Display text";
+        translations["piece_portal_station_configure_portal"] = "Configure portal sign";
     }
 }
 

@@ -38,13 +38,12 @@ internal static class PortalTagHelper
 
         displayText = PortalTextHelper.ClampDisplayName(displayText?.Trim() ?? string.Empty);
 
-        ZNetView nview = portal.GetComponent<ZNetView>();
-        if (nview == null || !nview.IsValid())
+        if (!TryClaimPortalOwnership(portal, out error))
         {
-            error = "Portal is not ready yet.";
             return false;
         }
 
+        ZNetView nview = portal.GetComponent<ZNetView>();
         nview.GetZDO().Set(ModConstants.ZdoDisplayText, displayText);
         RefreshPortalSign(portal);
         return true;
@@ -64,31 +63,30 @@ internal static class PortalTagHelper
         }
 
         string plainName = PortalTextHelper.ClampPortalName(portalName);
-        if (string.IsNullOrWhiteSpace(plainName))
-        {
-            error = "Portal name cannot be empty.";
-            return false;
-        }
-
         if (plainName.Length > ModConstants.PortalNameMaxLength)
         {
             error = $"Portal name cannot exceed {ModConstants.PortalNameMaxLength} characters.";
             return false;
         }
 
+        if (!TryClaimPortalOwnership(portal, out error))
+        {
+            return false;
+        }
+
+        // Claim first so vanilla RPC_SetTag (owner-only) can apply on this client.
         portal.SetText(plainName);
 
         ZNetView nview = portal.GetComponent<ZNetView>();
         string finalDisplay = PortalTextHelper.BuildDisplayText(plainName, displayText);
+        finalDisplay = PortalTextHelper.ClampDisplayName(finalDisplay);
         if (nview != null && nview.IsValid())
         {
             nview.GetZDO().Set(ModConstants.ZdoDisplayText, finalDisplay);
-            nview.GetZDO().Set(ModConstants.ZdoStationLinked, true);
+            nview.GetZDO().Set(ModConstants.ZdoStationLinked, !string.IsNullOrWhiteSpace(plainName));
         }
 
-        PortalNameSign displaySign = portal.GetComponentInChildren<PortalNameSign>(true);
-        displaySign?.SetDisplayText(PortalTextHelper.FormatDisplayForRender(finalDisplay));
-
+        RefreshPortalSign(portal);
         return true;
     }
 
@@ -98,6 +96,11 @@ internal static class PortalTagHelper
         if (portal == null)
         {
             error = "No linked portal found.";
+            return false;
+        }
+
+        if (!TryClaimPortalOwnership(portal, out error))
+        {
             return false;
         }
 
@@ -111,6 +114,30 @@ internal static class PortalTagHelper
         }
 
         RefreshPortalSign(portal);
+        return true;
+    }
+
+    private static bool TryClaimPortalOwnership(TeleportWorld portal, out string error)
+    {
+        error = null;
+        ZNetView nview = portal?.GetComponent<ZNetView>();
+        if (nview == null || !nview.IsValid())
+        {
+            error = "Portal is not ready yet.";
+            return false;
+        }
+
+        if (!nview.IsOwner())
+        {
+            nview.ClaimOwnership();
+        }
+
+        if (!nview.IsOwner())
+        {
+            error = "Could not take ownership of this portal. Try again in a moment.";
+            return false;
+        }
+
         return true;
     }
 

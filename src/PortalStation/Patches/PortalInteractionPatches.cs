@@ -61,7 +61,7 @@ internal static class DestinationActivatePatch
             return;
         }
 
-        if (StationConfigUI.IsOpen)
+        if (ConfigUiHelper.IsOpen)
         {
             return;
         }

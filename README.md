@@ -184,8 +184,8 @@ Restart Valheim after changing values. Craft cost changes apply on next game lau
 
 ## Multiplayer notes
 
-- Configuration and activation run on the **server/host**.
-- Clients send requests via RPC; the server writes portal and station data.
+- Station config, portal-sign config, and destination activation use vanilla-style **claim ownership**: the player editing the piece takes ownership of that ZDO and writes changes locally; normal sync updates the server and other clients.
+- Works the same on **dedicated servers** and **listen-host** games — you do not need to own the piece beforehand.
 - All players need the mod installed to see signs, the station piece, and the config UI.
 - Private area (ward) checks apply when editing signs or activating destinations.
 

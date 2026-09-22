@@ -3,6 +3,8 @@
 ## 1.0.0
 
 - **Valheim 1.0 / Unity 6:** Recompiled against Valheim 1.0.7 managed assemblies and BepInExPack 5.4.2350.
+- **Networking:** Station config, portal-sign config, and destination activation now use **ClaimOwnership** + local ZDO writes (vanilla rename pattern). Removed custom config/activate RPCs — more reliable on dedicated and listen-host multiplayer.
+- **Added:** Dedicated portal-sign configuration UI (tag + rich-text display).
 - **Fixed:** Implemented `Hoverable.GetHoverOffset()` on station and portal signs (stops TypeLoadException spam).
 - **Fixed:** Wood piece prefab names for 1.0 (`woodwall`, `woodwallhalf`, `woodwallquarter`, `wood_pole_2`).
 - **Fixed:** Inactive destination signs use `DefaultPortalDescription`; the **active** destination (matching the linked portal tag) uses `DefaultHighlightColor`.

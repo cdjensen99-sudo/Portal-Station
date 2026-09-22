@@ -36,10 +36,6 @@ public static class ModConstants
     public const string ZdoPortalTag = "tag";
     public const string ZdoStationLinked = "PortalStation_StationLinked";
 
-    public const string RpcApplyStationConfig = "portal_station.apply_config";
-    public const string RpcActivateDestination = "portal_station.activate_destination";
-    public const string RpcPortalSignText = "portal_station.portal_sign";
-
     public static string SlotPortalKey(int index) => $"PortalStation_Slot{index}_Portal";
     public static string SlotDisplayKey(int index) => $"PortalStation_Slot{index}_Display";
 }

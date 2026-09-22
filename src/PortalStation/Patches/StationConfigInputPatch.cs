@@ -8,7 +8,7 @@ internal static class PlayerTakeInputStationConfigPatch
 {
     private static void Postfix(ref bool __result)
     {
-        if (StationConfigUI.IsOpen)
+        if (ConfigUiHelper.IsOpen)
         {
             __result = false;
         }
@@ -20,7 +20,7 @@ internal static class PlayerControllerTakeInputStationConfigPatch
 {
     private static void Postfix(ref bool __result)
     {
-        if (StationConfigUI.IsOpen)
+        if (ConfigUiHelper.IsOpen)
         {
             __result = false;
         }
@@ -44,7 +44,7 @@ internal static class PlayerSetControlsStationConfigPatch
         ref bool autoRun,
         ref bool dodge)
     {
-        if (!StationConfigUI.IsOpen)
+        if (!ConfigUiHelper.IsOpen)
         {
             return true;
         }
@@ -70,7 +70,7 @@ internal static class PlayerAttackInputStationConfigPatch
 {
     private static bool Prefix()
     {
-        return !StationConfigUI.IsOpen;
+        return !ConfigUiHelper.IsOpen;
     }
 }
 
@@ -79,7 +79,7 @@ internal static class MinimapStationConfigPatch
 {
     private static bool Prefix()
     {
-        return !StationConfigUI.IsOpen;
+        return !ConfigUiHelper.IsOpen;
     }
 }
 
@@ -88,7 +88,7 @@ internal static class GameCameraMouseCaptureStationConfigPatch
 {
     private static bool Prefix()
     {
-        if (!StationConfigUI.IsOpen)
+        if (!ConfigUiHelper.IsOpen)
         {
             return true;
         }
@@ -104,6 +104,6 @@ internal static class GameCameraUpdateStationConfigPatch
 {
     private static bool Prefix()
     {
-        return !StationConfigUI.IsOpen;
+        return !ConfigUiHelper.IsOpen;
     }
 }

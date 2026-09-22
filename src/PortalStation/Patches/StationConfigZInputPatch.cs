@@ -6,7 +6,7 @@ namespace PortalStation;
 [HarmonyPatch]
 internal static class StationConfigZInputPatch
 {
-    private static bool Block => StationConfigUI.IsOpen;
+    private static bool Block => ConfigUiHelper.IsOpen;
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(ZInput), nameof(ZInput.GetButtonDown), typeof(string))]

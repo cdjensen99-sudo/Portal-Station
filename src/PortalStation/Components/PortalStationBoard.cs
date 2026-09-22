@@ -10,18 +10,12 @@ public sealed class PortalStationBoard : MonoBehaviour
     private StationHeaderSign _headerSign;
     private readonly StationDestinationSign[] _destinationSigns = new StationDestinationSign[ModConstants.DestinationSlotCount];
     private bool _initialized;
-    private bool _rpcRegistered;
 
     private void Awake()
     {
         _nview = GetComponent<ZNetView>();
         _headerSign = GetComponentInChildren<StationHeaderSign>(true);
         RegisterDestinationSigns();
-
-        if (StationInstanceHelper.IsPlacedInstance(gameObject))
-        {
-            TryRegisterRpcs();
-        }
     }
 
     private void Start()
@@ -31,7 +25,6 @@ public sealed class PortalStationBoard : MonoBehaviour
             return;
         }
 
-        TryRegisterRpcs();
         Initialize();
         StationInteractionColliders.Enable(gameObject);
         RefreshSigns();
@@ -44,24 +37,6 @@ public sealed class PortalStationBoard : MonoBehaviour
         {
             _destinationSigns[i] = destinations[i];
         }
-    }
-
-    internal void TryRegisterRpcs()
-    {
-        if (!StationInstanceHelper.IsPlacedInstance(gameObject))
-        {
-            return;
-        }
-
-        _nview = GetComponent<ZNetView>();
-        if (_rpcRegistered || _nview == null || !_nview.IsValid())
-        {
-            return;
-        }
-
-        _nview.Register<string, string, string>(ModConstants.RpcApplyStationConfig, RPC_ApplyStationConfig);
-        _nview.Register<int>(ModConstants.RpcActivateDestination, RPC_ActivateDestination);
-        _rpcRegistered = true;
     }
 
     private void Initialize()
@@ -159,18 +134,14 @@ public sealed class PortalStationBoard : MonoBehaviour
 
     public void ActivateDestination(int slotIndex)
     {
-        if (_nview == null || !_nview.IsValid())
+        _nview = GetComponent<ZNetView>();
+        if (!TryClaimStationOwnership(out string error))
         {
+            NotifyPlayer(error);
             return;
         }
 
-        if (ZNet.instance != null && ZNet.instance.IsServer())
-        {
-            ServerActivateDestination(slotIndex);
-            return;
-        }
-
-        _nview.InvokeRPC(ModConstants.RpcActivateDestination, slotIndex);
+        ApplyDestination(slotIndex);
     }
 
     public void OpenConfiguration()
@@ -186,25 +157,37 @@ public sealed class PortalStationBoard : MonoBehaviour
     {
         message = string.Empty;
         _nview = GetComponent<ZNetView>();
-        TryRegisterRpcs();
 
+        if (!TryClaimStationOwnership(out message))
+        {
+            return false;
+        }
+
+        string portalPayload = EncodeSlots(portalNames);
+        string displayPayload = EncodeSlots(displayNames);
+        return ApplyConfiguration(stationName, portalPayload, displayPayload, out message);
+    }
+
+    private bool TryClaimStationOwnership(out string message)
+    {
+        message = string.Empty;
         if (_nview == null || !_nview.IsValid())
         {
             message = "Station is not ready yet. Try again in a moment.";
             return false;
         }
 
-        string portalPayload = EncodeSlots(portalNames);
-        string displayPayload = EncodeSlots(displayNames);
-
-        if (ZNet.instance != null && ZNet.instance.IsServer())
+        if (!_nview.IsOwner())
         {
-            return ServerApplyConfiguration(stationName, portalPayload, displayPayload, out message);
+            _nview.ClaimOwnership();
         }
 
-        _nview.InvokeRPC(ModConstants.RpcApplyStationConfig, stationName, portalPayload, displayPayload);
-        RefreshSigns();
-        message = "Configuration sent to server.";
+        if (!_nview.IsOwner())
+        {
+            message = "Could not take ownership of this station. Try again in a moment.";
+            return false;
+        }
+
         return true;
     }
 
@@ -222,27 +205,7 @@ public sealed class PortalStationBoard : MonoBehaviour
         }
     }
 
-    private void RPC_ApplyStationConfig(long sender, string stationName, string portalPayload, string displayPayload)
-    {
-        if (ZNet.instance == null || !ZNet.instance.IsServer())
-        {
-            return;
-        }
-
-        ServerApplyConfiguration(stationName, portalPayload, displayPayload, out _);
-    }
-
-    private void RPC_ActivateDestination(long sender, int slotIndex)
-    {
-        if (ZNet.instance == null || !ZNet.instance.IsServer())
-        {
-            return;
-        }
-
-        ServerActivateDestination(slotIndex);
-    }
-
-    private bool ServerApplyConfiguration(
+    private bool ApplyConfiguration(
         string stationName,
         string portalPayload,
         string displayPayload,
@@ -295,10 +258,12 @@ public sealed class PortalStationBoard : MonoBehaviour
         RefreshSigns();
         RefreshAllLinkedStations(group);
         NotifyPlayer(message);
+        PortalStationPlugin.Log.LogInfo(
+            $"Station config applied (owner={_nview?.IsOwner() == true}): {message}");
         return true;
     }
 
-    private void ServerActivateDestination(int slotIndex)
+    private void ApplyDestination(int slotIndex)
     {
         if (slotIndex < 0 || slotIndex >= ModConstants.DestinationSlotCount)
         {

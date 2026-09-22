@@ -3,26 +3,23 @@ using UnityEngine;
 namespace PortalStation;
 
 /// <summary>
-/// Display sign above a portal. E on the sign edits display text only (rich text, up to 50 chars).
-/// Portal tag is edited separately via vanilla E on the TeleportWorld (max 10 chars).
+/// Sign above a portal. E opens a config UI for portal tag (pairing) and display text (rich text).
 /// </summary>
-public sealed class PortalNameSign : MonoBehaviour, Interactable, Hoverable, TextReceiver
+public sealed class PortalNameSign : MonoBehaviour, Interactable, Hoverable
 {
     private TeleportWorld _portal;
     private StationSignVisual _visual;
-    private bool _rpcRegistered;
 
     internal void Bind(TeleportWorld portal)
     {
         _portal = portal;
         _visual = GetComponent<StationSignVisual>();
-        RegisterRpc();
         RefreshFromPortal();
     }
 
     public string GetHoverName()
     {
-        return "Sign";
+        return "$piece_portal_station_sign";
     }
 
     public float GetHoverOffset()
@@ -32,14 +29,22 @@ public sealed class PortalNameSign : MonoBehaviour, Interactable, Hoverable, Tex
 
     public string GetHoverText()
     {
-        string text = PortalTextHelper.StripRichText(GetStoredDisplayText());
-        if (string.IsNullOrWhiteSpace(text))
+        string tag = PortalTextHelper.StripRichText(GetPortalTagForEdit());
+        string display = PortalTextHelper.StripRichText(GetDisplayTextForEdit());
+        if (string.IsNullOrWhiteSpace(display))
         {
-            text = "...";
+            display = "...";
+        }
+
+        if (string.IsNullOrWhiteSpace(tag))
+        {
+            tag = "...";
         }
 
         return Localization.instance.Localize(
-            $"\"{text}\"\n$piece_portal_station_sign\n[<color=yellow><b>$KEY_Use</b></color>] $piece_use");
+            $"\"{display}\"\n$piece_portal_station_sign\n" +
+            $"$piece_portal_station_portal_tag_label: {tag}\n" +
+            $"[<color=yellow><b>$KEY_Use</b></color>] $piece_portal_station_configure_portal");
     }
 
     public bool Interact(Humanoid user, bool hold, bool alt)
@@ -54,7 +59,7 @@ public sealed class PortalNameSign : MonoBehaviour, Interactable, Hoverable, Tex
             return false;
         }
 
-        TextInput.instance.RequestText(this, "$piece_sign_input", PortalTextHelper.DisplayNameMaxLength);
+        PortalSignConfigUI.Instance?.Open(this);
         return true;
     }
 
@@ -63,31 +68,45 @@ public sealed class PortalNameSign : MonoBehaviour, Interactable, Hoverable, Tex
         return false;
     }
 
-    public string GetText()
+    internal string GetPortalTagForEdit()
     {
-        return GetStoredDisplayText();
+        return PortalTagHelper.GetPortalTag(_portal);
     }
 
-    public void SetText(string text)
+    internal string GetDisplayTextForEdit()
     {
+        return PortalTagHelper.GetPortalDisplayText(_portal);
+    }
+
+    internal bool TryApplyConfiguration(string portalName, string displayName, out string message)
+    {
+        message = string.Empty;
+
         if (_portal == null)
         {
-            return;
+            message = "Portal is not ready yet. Try again in a moment.";
+            return false;
         }
 
-        text = PortalTextHelper.ClampDisplayName(text?.Trim() ?? string.Empty);
+        portalName = PortalTextHelper.ClampPortalName(portalName);
+        displayName = PortalTextHelper.ClampDisplayName(displayName?.Trim() ?? string.Empty);
 
-        ZNetView nview = _portal.GetComponent<ZNetView>();
-        if (nview != null && nview.IsValid() && ZNet.instance != null && ZNet.instance.IsServer())
+        if (!PortalTagHelper.TrySetPortalTagAndDisplay(_portal, portalName, displayName, out string error))
         {
-            ApplyDisplayText(text);
-            return;
+            message = error ?? "Could not update portal sign.";
+            Player.m_localPlayer?.Message(MessageHud.MessageType.Center, message);
+            return false;
         }
 
-        if (nview != null && nview.IsValid())
+        foreach (PortalStationBoard station in Object.FindObjectsByType<PortalStationBoard>(FindObjectsSortMode.None))
         {
-            nview.InvokeRPC(ModConstants.RpcPortalSignText, text);
+            station.RefreshSigns();
         }
+
+        message = "Portal sign saved.";
+        PortalStationPlugin.Log.LogInfo(
+            $"Portal sign applied (owner={_portal.GetComponent<ZNetView>()?.IsOwner() == true}).");
+        return true;
     }
 
     internal void RefreshFromPortal()
@@ -97,10 +116,11 @@ public sealed class PortalNameSign : MonoBehaviour, Interactable, Hoverable, Tex
             return;
         }
 
-        string display = GetStoredDisplayText();
+        string display = GetDisplayTextForEdit();
         if (string.IsNullOrWhiteSpace(PortalTextHelper.StripRichText(display)))
         {
-            display = "...";
+            string tag = GetPortalTagForEdit();
+            display = string.IsNullOrWhiteSpace(tag) ? "..." : tag;
         }
 
         _visual.SetDisplayText(PortalTextHelper.FormatDisplayForRender(display));
@@ -109,56 +129,5 @@ public sealed class PortalNameSign : MonoBehaviour, Interactable, Hoverable, Tex
     internal void SetDisplayText(string displayText)
     {
         _visual?.SetDisplayText(displayText);
-    }
-
-    private string GetStoredDisplayText()
-    {
-        return PortalTagHelper.GetPortalDisplayText(_portal);
-    }
-
-    private void RegisterRpc()
-    {
-        if (_rpcRegistered || _portal == null)
-        {
-            return;
-        }
-
-        ZNetView nview = _portal.GetComponent<ZNetView>();
-        if (nview == null)
-        {
-            return;
-        }
-
-        nview.Register<string>(ModConstants.RpcPortalSignText, RPC_ApplyPortalSignText);
-        _rpcRegistered = true;
-    }
-
-    private void ApplyDisplayText(string displayText)
-    {
-        if (!PortalTagHelper.TrySetPortalDisplay(_portal, displayText, out string error))
-        {
-            Player.m_localPlayer?.Message(MessageHud.MessageType.Center, error ?? "Could not update sign.");
-            return;
-        }
-
-        foreach (PortalStationBoard station in Object.FindObjectsByType<PortalStationBoard>(FindObjectsSortMode.None))
-        {
-            station.RefreshSigns();
-        }
-    }
-
-    private void RPC_ApplyPortalSignText(long sender, string text)
-    {
-        if (ZNet.instance == null || !ZNet.instance.IsServer())
-        {
-            return;
-        }
-
-        if (text != null && text.Length > PortalTextHelper.DisplayNameMaxLength)
-        {
-            return;
-        }
-
-        ApplyDisplayText(text?.Trim() ?? string.Empty);
     }
 }
